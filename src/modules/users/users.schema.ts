@@ -13,5 +13,18 @@ export const updateUserSchema = z.object({
   active: z.boolean().optional(),
 });
 
+// Admin redefinindo a senha de outro usuário (não precisa da senha atual).
+export const resetPasswordSchema = z.object({
+  newPassword: z.string().min(6, "Senha deve ter ao menos 6 caracteres"),
+});
+
+// Usuário trocando a própria senha (precisa confirmar a atual, por segurança).
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Senha atual obrigatória"),
+  newPassword: z.string().min(6, "Nova senha deve ter ao menos 6 caracteres"),
+});
+
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;

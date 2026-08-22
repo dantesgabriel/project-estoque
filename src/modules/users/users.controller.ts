@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { usersService } from "./users.service";
-import { createUserSchema, updateUserSchema } from "./users.schema";
+import { createUserSchema, resetPasswordSchema, updateUserSchema } from "./users.schema";
 
 export const usersController = {
   async create(req: Request, res: Response) {
@@ -22,6 +22,12 @@ export const usersController = {
   async update(req: Request, res: Response) {
     const input = updateUserSchema.parse(req.body);
     const user = await usersService.update(req.params.id, input);
+    return res.json(user);
+  },
+
+  async resetPassword(req: Request, res: Response) {
+    const input = resetPasswordSchema.parse(req.body);
+    const user = await usersService.resetPassword(req.params.id, input);
     return res.json(user);
   },
 };

@@ -13,3 +13,4 @@ usersRoutes.post("/", asyncHandler(usersController.create));
 usersRoutes.get("/", asyncHandler(usersController.list));
 usersRoutes.get("/:id", asyncHandler(usersController.getById));
 usersRoutes.patch("/:id", asyncHandler(usersController.update));
+usersRoutes.patch("/:id/password", asyncHandler(usersController.resetPassword));
