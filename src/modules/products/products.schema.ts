@@ -9,6 +9,7 @@ export const createProductSchema = z.object({
   minStock: z.number().int().min(0).default(0),
   maxStock: z.number().int().min(0).optional(),
   location: z.string().optional(),
+  tracksBatch: z.boolean().default(false),
 });
 
 export const updateProductSchema = z.object({
@@ -21,6 +22,7 @@ export const updateProductSchema = z.object({
   maxStock: z.number().int().min(0).optional(),
   location: z.string().optional(),
   active: z.boolean().optional(),
+  tracksBatch: z.boolean().optional(),
 });
 
 // Filtros da listagem (seção 7.3 do projeto): nome, categoria, estoque baixo, zerados, ativos/inativos.

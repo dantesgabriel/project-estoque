@@ -28,6 +28,10 @@ export const stockMovementsRepository = {
     invoiceNumber?: string;
     note?: string;
     userId: string;
+    // Entrada com lote: cria um novo lote com essa quantidade e vincula a movimentação a ele.
+    newBatch?: { batchNumber?: string; expirationDate: Date };
+    // Saída de um lote específico: decrementa esse lote e vincula a movimentação a ele.
+    consumeBatchId?: string;
   }) {
     return prisma.$transaction(async (tx) => {
       const product = await tx.product.findUnique({ where: { id: params.productId } });
@@ -43,6 +47,39 @@ export const stockMovementsRepository = {
         throw new Error("NEGATIVE_STOCK");
       }
 
+      let batchId: string | undefined;
+
+      if (params.type === "IN" && params.newBatch) {
+        const batch = await tx.batch.create({
+          data: {
+            productId: params.productId,
+            batchNumber: params.newBatch.batchNumber,
+            expirationDate: params.newBatch.expirationDate,
+            quantity: params.quantity,
+            supplier: params.supplier,
+          },
+        });
+        batchId = batch.id;
+      }
+
+      if (params.type === "OUT" && params.consumeBatchId) {
+        const batch = await tx.batch.findUnique({ where: { id: params.consumeBatchId } });
+
+        if (!batch || batch.productId !== params.productId) {
+          throw new Error("BATCH_NOT_FOUND");
+        }
+
+        if (batch.quantity < params.quantity) {
+          throw new Error("BATCH_INSUFFICIENT_QUANTITY");
+        }
+
+        await tx.batch.update({
+          where: { id: params.consumeBatchId },
+          data: { quantity: { decrement: params.quantity } },
+        });
+        batchId = params.consumeBatchId;
+      }
+
       const movement = await tx.stockMovement.create({
         data: {
           productId: params.productId,
@@ -53,8 +90,9 @@ export const stockMovementsRepository = {
           invoiceNumber: params.invoiceNumber,
           note: params.note,
           userId: params.userId,
+          batchId,
         },
-        include: { product: true },
+        include: { product: true, batch: true },
       });
 
       await tx.product.update({
@@ -74,11 +112,21 @@ export const stockMovementsRepository = {
             newStock,
             quantity: params.quantity,
             reason: params.reason,
+            batchId,
           },
         },
       });
 
       return { ...movement, product: { ...movement.product, currentStock: newStock } };
+    });
+  },
+
+  // Lote com validade mais próxima e saldo suficiente para cobrir a saída — usado
+  // como sugestão automática (FEFO) quando o usuário não escolhe um lote manualmente.
+  findFefoBatch(productId: string, quantity: number) {
+    return prisma.batch.findFirst({
+      where: { productId, quantity: { gte: quantity } },
+      orderBy: { expirationDate: "asc" },
     });
   },
 };

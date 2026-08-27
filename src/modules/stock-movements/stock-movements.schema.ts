@@ -17,6 +17,11 @@ export const createMovementSchema = z.object({
   supplier: z.string().optional(),
   invoiceNumber: z.string().optional(),
   note: z.string().optional(),
+  // Obrigatórios apenas para entradas de produtos com tracksBatch, dependendo
+  // da quantidade e do papel do usuário — validado no service, não aqui.
+  batchNumber: z.string().optional(),
+  expirationDate: z.coerce.date().optional(),
+  batchId: z.string().uuid().optional(), // usado na saída, para indicar de qual lote tirar (opcional — se omitido, usa FEFO)
 });
 
 export const listMovementsQuerySchema = z.object({

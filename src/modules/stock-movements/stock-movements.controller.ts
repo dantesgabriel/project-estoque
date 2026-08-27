@@ -11,7 +11,7 @@ export const stockMovementsController = {
 
   async createEntry(req: Request, res: Response) {
     const input = createMovementSchema.parse(req.body);
-    const movement = await stockMovementsService.createEntry(input, req.user!.id);
+    const movement = await stockMovementsService.createEntry(input, req.user!.id, req.user!.role);
     return res.status(201).json(movement);
   },
 

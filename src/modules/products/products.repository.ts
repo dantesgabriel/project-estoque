@@ -56,6 +56,7 @@ export const productsRepository = {
         minStock: data.minStock,
         maxStock: data.maxStock,
         location: data.location,
+        tracksBatch: data.tracksBatch,
       },
       include: { category: true },
     });

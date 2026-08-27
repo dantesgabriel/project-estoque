@@ -8,6 +8,7 @@ import { stockMovementsRoutes } from "./modules/stock-movements/stock-movements.
 import { inventoryRoutes } from "./modules/inventory/inventory.routes";
 import { adjustmentsRoutes } from "./modules/adjustments/adjustments.routes";
 import { dashboardRoutes } from "./modules/dashboard/dashboard.routes";
+import { batchesRoutes } from "./modules/batches/batches.routes";
 import { errorHandler } from "./shared/middlewares/errorHandler";
 
 export const app = express();
@@ -25,6 +26,7 @@ app.use("/stock-movements", stockMovementsRoutes);
 app.use("/inventories", inventoryRoutes);
 app.use("/adjustments", adjustmentsRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/batches", batchesRoutes);
 
 // Precisa ser o último app.use — captura erros de todas as rotas acima.
 app.use(errorHandler);

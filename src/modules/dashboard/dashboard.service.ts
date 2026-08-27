@@ -1,4 +1,7 @@
 import { dashboardRepository } from "./dashboard.repository";
+import { batchesRepository } from "../batches/batches.repository";
+
+const EXPIRING_SOON_DAYS = 30;
 
 // Une entradas/saídas e ajustes numa única linha do tempo, ordenada por data,
 // para alimentar a seção "Últimas movimentações" do dashboard (seção 18).
@@ -38,6 +41,8 @@ export const dashboardService = {
       inProgressInventory,
       recentMovements,
       recentAdjustments,
+      expiredBatches,
+      expiringSoonBatches,
     ] = await Promise.all([
       dashboardRepository.countActiveProducts(),
       dashboardRepository.countLowStock(),
@@ -46,6 +51,8 @@ export const dashboardService = {
       dashboardRepository.findInProgressInventory(),
       dashboardRepository.recentMovements(10),
       dashboardRepository.recentAdjustments(10),
+      batchesRepository.countExpired(),
+      batchesRepository.countExpiringSoon(EXPIRING_SOON_DAYS),
     ]);
 
     return {
@@ -53,6 +60,8 @@ export const dashboardService = {
       lowStockCount: Number(lowStockResult[0]?.count ?? 0),
       zeroStockCount,
       pendingDivergences,
+      expiredBatchesCount: expiredBatches,
+      expiringSoonBatchesCount: expiringSoonBatches,
       inventoryInProgress: inProgressInventory,
       recentActivity: mergeRecentActivity(recentMovements, recentAdjustments, 10),
     };
