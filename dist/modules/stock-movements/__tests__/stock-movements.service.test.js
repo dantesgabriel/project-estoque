@@ -23,6 +23,12 @@ const baseProduct = {
     categoryId: "cat-1",
     unit: "un",
     location: null,
+    tracksBatch: false,
+    category: {
+        id: "cat-1",
+        name: "Categoria",
+        createdAt: new Date(),
+    },
     createdAt: new Date(),
     updatedAt: new Date(),
 };
@@ -48,14 +54,14 @@ const baseProduct = {
         vitest_1.vi.mocked(stock_movements_repository_1.stockMovementsRepository.createWithStockUpdate).mockResolvedValue({
             id: "mov-1",
         });
-        const result = await stock_movements_service_1.stockMovementsService.createEntry({ productId: "prod-1", quantity: 20, reason: "COMPRA" }, "user-1");
+        const result = await stock_movements_service_1.stockMovementsService.createEntry({ productId: "prod-1", quantity: 20, reason: "COMPRA" }, "user-1", "FUNCIONARIO");
         (0, vitest_1.expect)(result).toEqual({ id: "mov-1" });
         (0, vitest_1.expect)(stock_movements_repository_1.stockMovementsRepository.createWithStockUpdate).toHaveBeenCalledWith(vitest_1.expect.objectContaining({ type: "IN", quantity: 20, productId: "prod-1" }));
     });
     (0, vitest_1.it)("propaga outros erros inesperados sem mascarar", async () => {
         vitest_1.vi.mocked(products_repository_1.productsRepository.findById).mockResolvedValue(baseProduct);
         vitest_1.vi.mocked(stock_movements_repository_1.stockMovementsRepository.createWithStockUpdate).mockRejectedValue(new Error("DB_CONNECTION_LOST"));
-        await (0, vitest_1.expect)(stock_movements_service_1.stockMovementsService.createEntry({ productId: "prod-1", quantity: 5, reason: "COMPRA" }, "user-1")).rejects.toThrow("DB_CONNECTION_LOST");
+        await (0, vitest_1.expect)(stock_movements_service_1.stockMovementsService.createEntry({ productId: "prod-1", quantity: 5, reason: "COMPRA" }, "user-1", "FUNCIONARIO")).rejects.toThrow("DB_CONNECTION_LOST");
     });
 });
 //# sourceMappingURL=stock-movements.service.test.js.map

@@ -25,6 +25,12 @@ const baseProduct = {
   categoryId: "cat-1",
   unit: "un",
   location: null,
+  tracksBatch: false,
+  category: {
+    id: "cat-1",
+    name: "Categoria",
+    createdAt: new Date(),
+  },
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -78,7 +84,8 @@ describe("stockMovementsService", () => {
 
     const result = await stockMovementsService.createEntry(
       { productId: "prod-1", quantity: 20, reason: "COMPRA" },
-      "user-1"
+      "user-1",
+      "FUNCIONARIO"
     );
 
     expect(result).toEqual({ id: "mov-1" });
@@ -96,7 +103,8 @@ describe("stockMovementsService", () => {
     await expect(
       stockMovementsService.createEntry(
         { productId: "prod-1", quantity: 5, reason: "COMPRA" },
-        "user-1"
+        "user-1",
+        "FUNCIONARIO"
       )
     ).rejects.toThrow("DB_CONNECTION_LOST");
   });

@@ -10,7 +10,11 @@ import { adjustmentsRoutes } from "./modules/adjustments/adjustments.routes";
 import { dashboardRoutes } from "./modules/dashboard/dashboard.routes";
 import { batchesRoutes } from "./modules/batches/batches.routes";
 import { suppliersRoutes } from "./modules/suppliers/suppliers.routes";
+import { tutorsRoutes, petsRoutes } from "./modules/tutors/tutors.routes";
+import { appointmentsRoutes } from "./modules/appointments/appointments.routes";
+import { appointmentsController } from "./modules/appointments/appointments.controller";
 import { errorHandler } from "./shared/middlewares/errorHandler";
+import { asyncHandler } from "./shared/middlewares/asyncHandler";
 
 export const app = express();
 
@@ -29,6 +33,10 @@ app.use("/adjustments", adjustmentsRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/batches", batchesRoutes);
 app.use("/suppliers", suppliersRoutes);
+app.use("/tutors", tutorsRoutes);
+app.use("/pets", petsRoutes);
+app.use("/appointments", appointmentsRoutes);
+app.get("/tutors/:id/history", asyncHandler(appointmentsController.tutorHistory));
 
 // Precisa ser o último app.use — captura erros de todas as rotas acima.
 app.use(errorHandler);

@@ -37,7 +37,7 @@ exports.dashboardRepository = {
             take: limit,
             orderBy: { createdAt: "desc" },
             include: {
-                product: { select: { name: true } },
+                product: { select: { name: true, sku: true, category: { select: { name: true } } } },
                 user: { select: { name: true } },
             },
         });
@@ -47,7 +47,7 @@ exports.dashboardRepository = {
             take: limit,
             orderBy: { createdAt: "desc" },
             include: {
-                product: { select: { name: true } },
+                product: { select: { name: true, sku: true, category: { select: { name: true } } } },
                 user: { select: { name: true } },
             },
         });

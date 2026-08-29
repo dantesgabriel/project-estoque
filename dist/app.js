@@ -16,7 +16,11 @@ const adjustments_routes_1 = require("./modules/adjustments/adjustments.routes")
 const dashboard_routes_1 = require("./modules/dashboard/dashboard.routes");
 const batches_routes_1 = require("./modules/batches/batches.routes");
 const suppliers_routes_1 = require("./modules/suppliers/suppliers.routes");
+const tutors_routes_1 = require("./modules/tutors/tutors.routes");
+const appointments_routes_1 = require("./modules/appointments/appointments.routes");
+const appointments_controller_1 = require("./modules/appointments/appointments.controller");
 const errorHandler_1 = require("./shared/middlewares/errorHandler");
+const asyncHandler_1 = require("./shared/middlewares/asyncHandler");
 exports.app = (0, express_1.default)();
 exports.app.use((0, cors_1.default)());
 exports.app.use(express_1.default.json());
@@ -31,6 +35,10 @@ exports.app.use("/adjustments", adjustments_routes_1.adjustmentsRoutes);
 exports.app.use("/dashboard", dashboard_routes_1.dashboardRoutes);
 exports.app.use("/batches", batches_routes_1.batchesRoutes);
 exports.app.use("/suppliers", suppliers_routes_1.suppliersRoutes);
+exports.app.use("/tutors", tutors_routes_1.tutorsRoutes);
+exports.app.use("/pets", tutors_routes_1.petsRoutes);
+exports.app.use("/appointments", appointments_routes_1.appointmentsRoutes);
+exports.app.get("/tutors/:id/history", (0, asyncHandler_1.asyncHandler)(appointments_controller_1.appointmentsController.tutorHistory));
 // Precisa ser o último app.use — captura erros de todas as rotas acima.
 exports.app.use(errorHandler_1.errorHandler);
 //# sourceMappingURL=app.js.map

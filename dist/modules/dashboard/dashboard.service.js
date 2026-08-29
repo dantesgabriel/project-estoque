@@ -10,6 +10,8 @@ function mergeRecentActivity(movements, adjustments, limit) {
     const movementEvents = movements.map((m) => ({
         type: m.type === "IN" ? "ENTRADA" : "SAIDA",
         productName: m.product.name,
+        sku: m.product.sku,
+        categoryName: m.product.category.name,
         quantity: m.quantity,
         userName: m.user.name,
         date: m.createdAt,
@@ -17,6 +19,8 @@ function mergeRecentActivity(movements, adjustments, limit) {
     const adjustmentEvents = adjustments.map((a) => ({
         type: "AJUSTE",
         productName: a.product.name,
+        sku: a.product.sku,
+        categoryName: a.product.category.name,
         quantity: a.difference,
         userName: a.user.name,
         date: a.createdAt,
