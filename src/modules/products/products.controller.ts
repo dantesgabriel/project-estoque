@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { productsService } from "./products.service";
-import { createProductSchema, listProductsQuerySchema, updateProductSchema } from "./products.schema";
+import { addProductBarcodeSchema, createProductSchema, listProductsQuerySchema, updateProductSchema } from "./products.schema";
 
 export const productsController = {
   async list(req: Request, res: Response) {
@@ -12,6 +12,16 @@ export const productsController = {
   async getById(req: Request, res: Response) {
     const product = await productsService.getById(req.params.id);
     return res.json(product);
+  },
+
+  async getByBarcode(req: Request, res: Response) {
+    const product = await productsService.getByBarcode(req.params.barcode);
+    return res.json(product);
+  },
+
+  async addBarcode(req: Request, res: Response) {
+    const product = await productsService.addBarcode(req.params.id, addProductBarcodeSchema.parse(req.body).barcode);
+    return res.status(201).json(product);
   },
 
   async create(req: Request, res: Response) {

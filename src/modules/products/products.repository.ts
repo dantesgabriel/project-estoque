@@ -4,15 +4,27 @@ import { CreateProductInput, ListProductsQuery, UpdateProductInput } from "./pro
 
 export const productsRepository = {
   findById(id: string) {
-    return prisma.product.findUnique({ where: { id }, include: { category: true } });
+    return prisma.product.findUnique({ where: { id }, include: { category: true, barcodes: true } });
   },
 
   findBySku(sku: string) {
     return prisma.product.findUnique({ where: { sku } });
   },
 
-  findByBarcode(barcode: string) {
-    return prisma.product.findUnique({ where: { barcode } });
+  async findByBarcode(barcode: string) {
+    const association = await prisma.productBarcode.findUnique({
+      where: { barcode },
+      include: { product: { include: { category: true } } },
+    });
+
+    if (association) return association.product;
+
+    // Compatibilidade para a breve janela entre atualizar o código e aplicar a migration.
+    return prisma.product.findUnique({ where: { barcode }, include: { category: true } });
+  },
+
+  createBarcode(productId: string, barcode: string) {
+    return prisma.productBarcode.create({ data: { productId, barcode } });
   },
 
   // lowStock (currentStock <= minStock) compara duas colunas — Prisma não suporta isso

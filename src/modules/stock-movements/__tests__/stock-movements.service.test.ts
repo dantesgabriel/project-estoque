@@ -31,6 +31,7 @@ const baseProduct = {
     name: "Categoria",
     createdAt: new Date(),
   },
+  barcodes: [],
   createdAt: new Date(),
   updatedAt: new Date(),
 };

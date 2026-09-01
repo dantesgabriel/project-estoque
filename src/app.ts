@@ -13,6 +13,8 @@ import { suppliersRoutes } from "./modules/suppliers/suppliers.routes";
 import { tutorsRoutes, petsRoutes } from "./modules/tutors/tutors.routes";
 import { appointmentsRoutes } from "./modules/appointments/appointments.routes";
 import { appointmentsController } from "./modules/appointments/appointments.controller";
+import { reportsRoutes } from "./modules/reports/reports.routes";
+import { alertsRoutes } from "./modules/alerts/alerts.routes";
 import { errorHandler } from "./shared/middlewares/errorHandler";
 import { asyncHandler } from "./shared/middlewares/asyncHandler";
 
@@ -36,6 +38,8 @@ app.use("/suppliers", suppliersRoutes);
 app.use("/tutors", tutorsRoutes);
 app.use("/pets", petsRoutes);
 app.use("/appointments", appointmentsRoutes);
+app.use("/reports", reportsRoutes);
+app.use("/notifications", alertsRoutes);
 app.get("/tutors/:id/history", asyncHandler(appointmentsController.tutorHistory));
 
 // Precisa ser o último app.use — captura erros de todas as rotas acima.

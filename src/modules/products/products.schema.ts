@@ -25,6 +25,10 @@ export const updateProductSchema = z.object({
   tracksBatch: z.boolean().optional(),
 });
 
+export const addProductBarcodeSchema = z.object({
+  barcode: z.string().trim().min(1, "Código de barras obrigatório"),
+});
+
 // Filtros da listagem (seção 7.3 do projeto): nome, categoria, estoque baixo, zerados, ativos/inativos.
 export const listProductsQuerySchema = z.object({
   name: z.string().optional(),

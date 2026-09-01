@@ -155,10 +155,25 @@ model Product {
   stockAdjustments StockAdjustment[]
   batches          Batch[]
   appointmentItems AppointmentItem[]
+  barcodes          ProductBarcode[]
 
   @@index([categoryId])
   @@index([active])
   @@map("products")
+}
+
+// Um mesmo produto pode ser comercializado por diversos fabricantes,
+// cada um com seu próprio código de barras.
+model ProductBarcode {
+  id        String   @id @default(uuid())
+  productId String
+  barcode   String   @unique
+  createdAt DateTime @default(now())
+
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@index([productId])
+  @@map("product_barcodes")
 }
 
 // ------------------------------------------------------------
